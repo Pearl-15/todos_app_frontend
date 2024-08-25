@@ -90,14 +90,6 @@ class ToDoItem extends React.Component {
   formatDate = (date) => {
     return (moment(date).format(dateFormat))
   }
-
-  componentDidMount(){
-    console.log("ToDoItem component Did Mount");
-    console.log("Selected to do item");
-    // todoStore.setSelectedToDoItem(selectedToDoItem);
-   
-    
-  }
   
   render() {
     // let todoItem = this.state.todoItem;

@@ -9,6 +9,7 @@ import ToDoForm from './ToDoForm';
 import { todoStore } from '../store/todo';
 import { observer } from 'mobx-react';
 import { toJS } from 'mobx';
+import { uiStore } from '../store/ui';
 
 
 
@@ -42,7 +43,6 @@ class ToDoTable extends React.Component {
             filteredToDoTable: [],
             selectedTask: "",
             isFormVisible: false,
-            loading: true
         }
     }
 
@@ -92,6 +92,7 @@ class ToDoTable extends React.Component {
                 await this.handleTaskFilter(this.state.selectedTask);
                 this.handleCancel(values);
                 await message.success('New ToDo has been added successfully', 2);
+
             } catch (e) {
                 message.error('Add ToDo unsuccessful, something is wrong, please try again!');
                 console.log('Component Error: ', e);
@@ -117,7 +118,6 @@ class ToDoTable extends React.Component {
     };
 
     handleChangeStatus = async (updatedStatus, todoItemId) => {
-
         try {
             await todoStore.updateToDoItem(todoItemId, updatedStatus);
             await this.handleTaskFilter(this.state.selectedTask);
@@ -143,19 +143,29 @@ class ToDoTable extends React.Component {
 
     async componentDidMount() {
         console.log("ToDoTable : componetDidMount")
-
+        uiStore.setIsLoading(true);
         try {
             await todoStore.getToDoList();
             this.setState({
                 filteredToDoTable: todoStore.todoTable,
                 selectedTask: "all",
-                loading: false,
             });
+            uiStore.setIsLoading(false);
         } catch (error) {
             console.log('Component Error : ', error.message);
-            this.setState({ loading: false });
+            uiStore.setIsLoading(false);
             message.error('Something weng wrong, please try again!');     
         }
+    }
+
+    componentWillUnmount(){
+        this.setState(
+        {
+                filteredToDoTable: [],
+                selectedTask: "",
+                isFormVisible: false,
+        }
+        )
     }
 
     render() {
@@ -174,7 +184,7 @@ class ToDoTable extends React.Component {
                     </Col>
                 </Row>
 
-                {this.state.loading ?
+                {uiStore.isloading ?
                     <>
                         <div style={{ textAlign: "center", margin: "30%" }}>
                             <Spin tip="Loading..."></Spin>
