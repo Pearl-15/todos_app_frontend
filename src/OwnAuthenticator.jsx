@@ -1,6 +1,7 @@
 import {
     Authenticator,
     SignIn,
+    SignUp,
     ConfirmSignIn,
     RequireNewPassword,
     VerifyContact,
@@ -58,12 +59,12 @@ class OwnAutheticator extends Component{
             <div>
                 <Authenticator
                 theme={customTheme}
-                // hideDefault={true}
-                signUpConfig={signUpConfig}
+                hideDefault={true}
+                // signUpConfig={signUpConfig}
                 onStateChange={this.handleAuthStateChange}
                 >
                 <App />
-                {/* <SignIn /> */}
+                <SignIn />
                 </Authenticator>
             </div>
         )

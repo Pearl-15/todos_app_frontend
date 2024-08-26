@@ -1,6 +1,8 @@
 import React from 'react';
 import styled from 'styled-components';
-import { Layout } from "antd";
+import { Layout, Button, Row, Col, Avatar, Divider } from "antd";
+import { Auth } from 'aws-amplify';
+import { authStore } from '../store/auth';
 const { Header } = Layout;
 
 // style using div
@@ -25,11 +27,37 @@ const StyledHeader = styled(Header)`
     font-weight: bold;
 `
 class HeaderSection extends React.Component{
-    
-    render(){    
+
+    handleLogOut = () => {
+        console.log("Log out has been clicked");
+        localStorage.removeItem("lastActiveTimeStamp");
+        Auth.signOut()
+        .then(data => console.log(data))
+        .catch(err => console.log(err));
+    }
+    render(){  
+        let user_email = authStore.email || "";
+        let avator_name = String(user_email.charAt(0)).toUpperCase();  
         return(
-        <StyledHeader>
-                To Do List
+        <StyledHeader> 
+                <Row>
+                    <Col span={20}>
+                    To Do List
+                    </Col>
+                    <Col span={4} style={{textAlign: 'right'}}>
+                    <Avatar style={{ color: '#f56a00', backgroundColor: '#fde3cf' }}>
+                        {avator_name}
+                    </Avatar>
+                    <Divider type="vertical"></Divider>
+                    <Button 
+                    onClick={() => this.handleLogOut()} 
+                    ghost 
+                    style={{ borderColor: '#fff', color: '#fff' }}
+                    >
+                    Logout
+                    </Button>
+                    </Col>
+                </Row>
         </StyledHeader>
         )
     }
