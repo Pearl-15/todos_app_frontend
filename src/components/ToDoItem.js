@@ -6,13 +6,14 @@ import moment from 'moment';
 import { observer } from 'mobx-react';
 import { todoStore } from '../store/todo';
 import { toJS } from 'mobx';
+import { THEME_COLOR } from '../consts/theme';
 
 
 const dateFormat = 'DD/MM/YY';
 
 const StyledToDoCard = styled.div`
   border: 1.5px solid black;
-  border-color: #f5ba13;
+  border-color: ${THEME_COLOR.ORANGE};
   padding: 10px;
   border-radius: 0.8rem; 
 

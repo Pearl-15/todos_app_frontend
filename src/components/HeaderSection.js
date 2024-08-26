@@ -3,23 +3,13 @@ import styled from 'styled-components';
 import { Layout, Button, Row, Col, Avatar, Divider } from "antd";
 import { Auth } from 'aws-amplify';
 import { authStore } from '../store/auth';
+import { THEME_COLOR } from '../consts/theme';
 const { Header } = Layout;
 
-// style using div
-// const StyledHeader = styled.div`
-// .ant-layout-header{
-//     background-color: #f5ba13;
-//     margin: auto -20px;
-//     box-shadow: 0 0 10px 0 rgba(0, 0, 0, 0.3);
-//     color: #fff;
-//     font-size: x-large;
-//     font-weight: bold;
-// }
-// `
 
 
 const StyledHeader = styled(Header)`
-    background-color: #f5ba13;
+    background-color: ${THEME_COLOR.ORANGE};
     margin: auto -20px;
     box-shadow: 0 0 10px 0 rgba(0, 0, 0, 0.3);
     color: #fff;

@@ -10,6 +10,7 @@ import { todoStore } from '../store/todo';
 import { observer } from 'mobx-react';
 import { toJS } from 'mobx';
 import { uiStore } from '../store/ui';
+import { THEME_COLOR } from '../consts/theme';
 
 
 
@@ -85,12 +86,14 @@ class ToDoTable extends React.Component {
 
     }
     handleOk = async (values) => {
+
         if (!values.id) {
             //if AddToDoOK
             try {
+                values["date"] = values["date"];
                 await todoStore.addToDoItem(values);
                 await this.handleTaskFilter(this.state.selectedTask);
-                this.handleCancel(values);
+                this.handleCancel();
                 await message.success('New ToDo has been added successfully', 2);
 
             } catch (e) {
@@ -178,7 +181,7 @@ class ToDoTable extends React.Component {
                     </Col>
                     <Col span={8} offset={8}>
                         <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'flex-end' }}>
-                            <span style={{ marginRight: '8px', color: 'white', backgroundColor: '#f5ba13', padding: '4.5px 12px', borderRadius: '0.2rem', fontWeight: 'bold' }}>Select Task</span>
+                            <span style={{ marginRight: '8px', color: 'white', backgroundColor: THEME_COLOR.ORANGE, padding: '4.5px 12px', borderRadius: '0.2rem', fontWeight: 'bold' }}>Select Task</span>
                             <SelectTaskDropdown onFilter={this.handleTaskFilter} />
                         </div>
                     </Col>
