@@ -3,6 +3,7 @@ import { AddToDoItem } from '../API/postData';
 import { UpdateToDoItem } from '../API/updateData';
 import { DeleteToDoItem } from '../API/deleteData';
 import { GetToDoItem, GetToDoList } from "../API/getData";
+import moment from 'moment';
 
 class ToDo {
     todoTable = [];
@@ -16,10 +17,17 @@ class ToDo {
         this.selectedToDoItem = targetItem;
     };
 
-    addToDoItem = flow(function* (newToDo) {
-        newToDo.status = false;
-        console.log("$$$ todo ", newToDo);
-        const responseData = yield AddToDoItem(newToDo);
+    addToDoItem = flow(function* (todoItem) {
+
+       const newTodo = {
+            created_at : todoItem["created_at"].unix(),
+            title: todoItem["title"],
+            content: todoItem["content"],
+            is_done: false,
+        }
+
+        console.log("add todo item payload ", newTodo);
+        const responseData = yield AddToDoItem(newTodo);
         console.log('ToDo added successfully:', responseData);
         yield this.getToDoList();
     });
@@ -31,14 +39,16 @@ class ToDo {
         console.log("this.todoTable ", this.todoTable);
     });
 
-    updateToDoItem = flow(function* (id, updatedTodoItem) {
-        const todoItem = this.todoTable.find((item) => item.id === id);
+    updateToDoItem = flow(function* (id, updatedValues) {
         let responseData;
-        if(typeof updatedTodoItem ==='boolean'){
-            const updatedStatus = { status: updatedTodoItem };
+        if(typeof updatedValues ==='boolean'){
+            const updatedStatus = { is_done: updatedValues,updated_at: moment().unix() };
+
             responseData = yield UpdateToDoItem(id, updatedStatus);
         }else{
-            responseData = yield UpdateToDoItem(id, updatedTodoItem);   
+            updatedValues["updated_at"] = moment().unix();
+            updatedValues["created_at"] = updatedValues["created_at"].unix();
+            responseData = yield UpdateToDoItem(id, updatedValues);   
         }
         console.log('Edited Successfully in DB: ', responseData);
         this.selectedToDoItem = responseData.data

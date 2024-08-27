@@ -26,7 +26,7 @@ const filter = (selectedTask, todoTable) => {
     // Use filter() to filter the todoTable based on selectedStatus
     const filteredItems = todoTable.filter((todoItem) => {
         if (selectedStatus !== "") {
-            return todoItem.status === selectedStatus;
+            return todoItem.is_done === selectedStatus;
         }
         return todoItem
 
@@ -60,11 +60,11 @@ class ToDoTable extends React.Component {
                //to render based on state change 
             //    const targetItem = this.state.filteredToDoTable.find((item) => item.id === todoItemId);
                 let targetItem = todoStore.selectedToDoItem;
-               const dateMoment = moment(targetItem.date); //convert date(string) to
+               const dateMoment = moment(targetItem.created_at).unix(); //convert date(string) to
                this.setState({
                    isFormVisible: true,
                });   
-               targetItem.date = dateMoment;
+               targetItem.created_at = dateMoment;
                todoStore.setSelectedToDoItem(targetItem)
                console.log("OnEdit : ", todoItemId);
         }         
@@ -198,7 +198,7 @@ class ToDoTable extends React.Component {
 
                             {this.state.filteredToDoTable.map((todoItem) => {
 
-                                const dateMoment = moment(todoItem.date);
+                                const dateMoment = moment(todoItem.created_at);
                                 console.log("todoitem.content", todoItem.content)
                                 return (
   
@@ -207,8 +207,8 @@ class ToDoTable extends React.Component {
                                             id={todoItem.id}
                                             title={todoItem.title}
                                             content={todoItem.content}
-                                            date={dateMoment}
-                                            status={todoItem.status}
+                                            created_at={dateMoment}
+                                            is_done={todoItem.is_done}
                                             todoItem={todoItem}
                                             onDelete={this.handleDelete}
                                             onEdit={this.showToDoForm}

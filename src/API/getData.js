@@ -7,7 +7,8 @@ export const GetToDoList = ()=>{
 
     const path = `/list`; 
     return API.get(apiName, path,myInit);
-
+    // let response = {data: []}
+    // return response
 }
 
 export const GetToDoItem = (id) =>{

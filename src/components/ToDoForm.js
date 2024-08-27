@@ -48,8 +48,8 @@ class ToDoForm extends React.Component {
           setFieldsValue({
             title: "",
             content: "",
-            date: today,
-            status: false,
+            created_at: today,
+            is_done: false,
           });
         }
       }
@@ -64,8 +64,8 @@ class ToDoForm extends React.Component {
         id:"",
         title: "",
         content: "",
-        date: today,
-        status: false,
+        created_at: today,
+        is_done: false,
       }); 
   }
 
@@ -75,8 +75,8 @@ class ToDoForm extends React.Component {
       id: todoStore.selectedToDoItem.id,
       title: todoStore.selectedToDoItem.title ,
       content: todoStore.selectedToDoItem.content ,
-      date: todoStore.selectedToDoItem.date ,
-      status: todoStore.selectedToDoItem.status ,
+      created_at: moment.unix(todoStore.selectedToDoItem.created_at) ,
+      is_done: todoStore.selectedToDoItem.is_done ,
     });
   }
 
@@ -90,9 +90,9 @@ class ToDoForm extends React.Component {
     return (
       <Form onSubmit={this.handleSubmit}>
         <Form.Item label='Date'>
-          {getFieldDecorator('date', {
+          {getFieldDecorator('created_at', {
             rules: [{ required: true, message: 'Please select date!' }],
-          })(<DatePicker format={dateFormat} disabledDate={disabledDate} />)}
+          })(<DatePicker format={dateFormat} disabledDate={disabledDate} showTime/>)}
         </Form.Item>
         <Form.Item label='Title' validateStatus={titleError ? 'error' : ''} help={titleError || ''}>
           {getFieldDecorator('title', {
@@ -111,7 +111,7 @@ class ToDoForm extends React.Component {
             />)}
         </Form.Item>
         <Form.Item style={{ display: 'none' }}>
-          {getFieldDecorator('status')(<Input type="hidden" />)}
+          {getFieldDecorator('is_done')(<Input type="hidden" />)}
         </Form.Item>
         <Form.Item style={{ display: 'none' }}>
           {getFieldDecorator('id')(<Input type="hidden" />)}

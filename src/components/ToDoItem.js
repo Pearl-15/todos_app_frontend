@@ -38,8 +38,8 @@ class ToDoItem extends React.Component {
       "id":this.props.id,
       "title": this.props.title,
       "content": this.props.content,
-      "date": this.props.date,
-      "status": this.props.status
+      "created_at": this.props.created_at,
+      "is_done": this.props.is_done
     }
   
     todoStore.setSelectedToDoItem(selectedToDoItem);
@@ -57,8 +57,8 @@ class ToDoItem extends React.Component {
       "id":this.props.id,
       "title": this.props.title,
       "content": this.props.content,
-      "date": this.props.date,
-      "status": this.props.status
+      "created_at": this.props.created_at,
+      "is_done": this.props.is_done
     }
     todoStore.setSelectedToDoItem(selectedToDoItem);
     this.props.onChangeStatus(e, this.props.id);
@@ -70,8 +70,8 @@ class ToDoItem extends React.Component {
         "id": todoStore.selectedToDoItem.id,
         "title": todoStore.selectedToDoItem.title,
         "content": todoStore.selectedToDoItem.content,
-        "status": todoStore.selectedToDoItem.status,
-        "date": todoStore.selectedToDoItem.date
+        "created_at": todoStore.selectedToDoItem.created_at,
+        "is_done": todoStore.selectedToDoItem.is_done
       },
     })
   }
@@ -82,8 +82,8 @@ class ToDoItem extends React.Component {
         "id": "",
         "title": "",
         "content": "",
-        "status": "",
-        "date": ""
+        "created_at": "",
+        "is_done": ""
       },
     })
   }
@@ -99,12 +99,12 @@ class ToDoItem extends React.Component {
       <StyledToDoCard>
         <div style={{ display: 'flex', justifyContent: 'space-between' }}>
           <div>
-            {todoItem.status ? <Tag color="#3ec166">{todoItem.title}</Tag> : <Tag color="grey">{this.props.title}</Tag>}
+            {todoItem.is_done ? <Tag color="#3ec166">{todoItem.title}</Tag> : <Tag color="grey">{this.props.title}</Tag>}
           </div>
 
           <div>
             <StyledSwitch
-              checked={todoItem.status}
+              checked={todoItem.is_done}
               checkedChildren={<Icon type="check" />}
               unCheckedChildren={<Icon type="close" />}
               onChange={this.handleTaskDone}
