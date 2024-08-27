@@ -1,31 +1,32 @@
 import {
     Authenticator,
     SignIn,
-    SignUp,
-    ConfirmSignIn,
-    RequireNewPassword,
-    VerifyContact,
-    ForgotPassword,
-    TOTPSetup
   } from "aws-amplify-react";
   
 import React, { Component } from "react";
 import App from "./App";
-import Amplify, { Auth, Hub } from "aws-amplify";
-import { observer } from "mobx-react";
+import { Auth, Hub } from "aws-amplify";
 import { authStore } from "./store/auth";
 import { myInit } from "./API/api";
-
+import {Row, Col} from "antd";
+import { THEME_COLOR } from "./consts/theme";
+import favicon from "./favicon.png";
 
 class OwnAutheticator extends Component{
     constructor(props){
         super(props);
+        this.state = {
+          isAuthenticated: false
+        }
     }
 
     handleAuthStateChange = (state) => {
         
         console.log("State ", state)
         if (state === "signedIn"){
+            this.setState({
+              isAuthenticated: true
+            })
             Auth.currentSession()
             Auth.currentAuthenticatedUser({
                 bypassCache: true
@@ -49,23 +50,61 @@ class OwnAutheticator extends Component{
                 myInit.headers.Authorization =  cognitoJWTToken
                 console.log("myInit",myInit)
                 Hub.dispatch("auth", { event: "UserDataReady" }, "Auth");
+
                 
             })
+        }else {
+          this.setState({
+            isAuthenticated: false
+          })
         }
     }
 
     render(){
         return(
             <div>
-                <Authenticator
-                theme={customTheme}
-                hideDefault={true}
-                // signUpConfig={signUpConfig}
-                onStateChange={this.handleAuthStateChange}
+              <Row type="flex" justify="space-between" align="middle" style={{height: '100vh' }}>
+                {this.state.isAuthenticated 
+                ? 
+                <Col span={24}>
+                  <App></App>
+                </Col>
+                :
+                <>
+                <Col span={16} 
+                style= {{
+                  background: 'white', 
+                  height: '100vh',  
+                  textAlign: 'center',
+                  alignContent: 'center'
+                  }}>
+                  <h1 style={{ fontStyle: 'italic'}}>Turn To-Dos into Dones...</h1>
+                  <img
+                    src={favicon}
+                    alt="favicon"
+                  />
+                </Col>
+                <Col span={8} 
+                  style={{
+                    background: THEME_COLOR.ORANGE,
+                    height: '100vh',
+                    textAlign: 'center',
+                    alignContent: 'center'
+                  }}
                 >
-                <App />
-                <SignIn />
-                </Authenticator>
+                  <Authenticator
+                  theme={customTheme}
+                  hideDefault={true}
+                  // signUpConfig={signUpConfig}
+                  onStateChange={this.handleAuthStateChange}
+                  >
+                  <SignIn />
+                  </Authenticator>
+                </Col>
+                </>
+                }
+              </Row>
+                
             </div>
         )
     }
