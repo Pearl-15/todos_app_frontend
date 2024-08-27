@@ -198,7 +198,7 @@ class ToDoTable extends React.Component {
 
                             {this.state.filteredToDoTable.map((todoItem) => {
 
-                                const dateMoment = moment(todoItem.created_at);
+                                // const dateMoment = moment(todoItem.created_at);
                                 console.log("todoitem.content", todoItem.content)
                                 return (
   
@@ -207,7 +207,7 @@ class ToDoTable extends React.Component {
                                             id={todoItem.id}
                                             title={todoItem.title}
                                             content={todoItem.content}
-                                            created_at={dateMoment}
+                                            created_at={todoItem.created_at}
                                             is_done={todoItem.is_done}
                                             todoItem={todoItem}
                                             onDelete={this.handleDelete}

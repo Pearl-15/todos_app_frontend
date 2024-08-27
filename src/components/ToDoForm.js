@@ -5,7 +5,7 @@ import { todoStore } from '../store/todo';
 
 const { TextArea } = Input;
 
-const dateFormat = 'DD/MM/YY';
+const dateFormat = 'DD/MM/YY HH:mm';
 
 const today = moment();
 
@@ -75,7 +75,7 @@ class ToDoForm extends React.Component {
       id: todoStore.selectedToDoItem.id,
       title: todoStore.selectedToDoItem.title ,
       content: todoStore.selectedToDoItem.content ,
-      created_at: moment.unix(todoStore.selectedToDoItem.created_at) ,
+      created_at: moment.unix(todoStore.selectedToDoItem.created_at),
       is_done: todoStore.selectedToDoItem.is_done ,
     });
   }

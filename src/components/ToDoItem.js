@@ -114,8 +114,13 @@ class ToDoItem extends React.Component {
         </div>
         
         <br></br>
+        
+        <Tag color="green">Start: {moment.unix(todoItem.created_at).format("DD/MM/YY HH:mm")}</Tag>
 
-        <Tag>{this.formatDate(todoItem.date)}</Tag>
+        {(todoItem.is_done === true && todoItem.updated_at)
+        &&
+        <Tag color="red">End: {moment.unix(todoItem.updated_at).format("DD/MM/YY HH:mm")}</Tag>
+        }
 
         <p>{todoItem.content}</p>
         <Popconfirm
