@@ -43,7 +43,7 @@ class ToDoTable extends React.Component {
         this.state = {
             filteredToDoTable: [],
             selectedTask: "",
-            isFormVisible: false,
+            isFormVisible: false
         }
     }
 
@@ -62,7 +62,7 @@ class ToDoTable extends React.Component {
                 let targetItem = todoStore.selectedToDoItem;
                const dateMoment = moment(targetItem.created_at).unix(); //convert date(string) to
                this.setState({
-                   isFormVisible: true,
+                   isFormVisible: true
                });   
                targetItem.created_at = dateMoment;
                todoStore.setSelectedToDoItem(targetItem)
@@ -114,6 +114,8 @@ class ToDoTable extends React.Component {
                 console.log('Component Error: ', e.message);
             }
         }
+
+        todoStore.setSelectedToDoItem();
     }
 
     handleCancel = () => {
@@ -204,11 +206,6 @@ class ToDoTable extends React.Component {
   
                                     <Col span={6} key={todoItem.id}>
                                         <ToDoItem
-                                            id={todoItem.id}
-                                            title={todoItem.title}
-                                            content={todoItem.content}
-                                            created_at={todoItem.created_at}
-                                            is_done={todoItem.is_done}
                                             todoItem={todoItem}
                                             onDelete={this.handleDelete}
                                             onEdit={this.showToDoForm}

@@ -17,17 +17,6 @@ function disabledDate(current) {
 
 class ToDoForm extends React.Component {
 
-  async componentDidMount() {
-    console.log('ToDoForm : componentDidMount')
-    await this.updateFormFields();
-  }
-
-  async componentDidUpdate(prevProps, prevState) {
-
-    if (this.props.form.getFieldValue('id') !== todoStore.selectedToDoItem.id) {
-      await this.updateFormFields();
-    }
-  }
   componentWillUnmount() {
     console.log('Component Will Unmount')
     this.props.form.resetFields();
@@ -69,33 +58,23 @@ class ToDoForm extends React.Component {
       }); 
   }
 
-  async updateFormFields() {
-    const { setFieldsValue } = this.props.form;
-    await setFieldsValue({
-      id: todoStore.selectedToDoItem.id,
-      title: todoStore.selectedToDoItem.title ,
-      content: todoStore.selectedToDoItem.content ,
-      created_at: moment.unix(todoStore.selectedToDoItem.created_at),
-      is_done: todoStore.selectedToDoItem.is_done ,
-    });
-  }
-
-
-
   render() {
     const { getFieldDecorator, getFieldError } = this.props.form;
-    // const { title, content } = this.props; // Receive title and content as props
     const titleError = getFieldError('title');
     const contentError = getFieldError('content');
+    const todoItem = todoStore.selectedToDoItem;
     return (
       <Form onSubmit={this.handleSubmit}>
         <Form.Item label='Date'>
-          {getFieldDecorator('created_at', {
+          {getFieldDecorator('created_at', 
+          {
+            initialValue: todoItem.create_at  ? moment(todoItem.create_at): moment(new Date()),
             rules: [{ required: true, message: 'Please select date!' }],
-          })(<DatePicker format={dateFormat} disabledDate={disabledDate} showTime/>)}
+          })(<DatePicker format="DD/YY/MM HH:mm" disabledDate={disabledDate} showTime/>)}
         </Form.Item>
         <Form.Item label='Title' validateStatus={titleError ? 'error' : ''} help={titleError || ''}>
           {getFieldDecorator('title', {
+            initialValue: todoItem.title || "",
             rules: [{ required: true, message: 'Please input todo title!' }, { max: 20, message: 'Title must not exceed 20 characters!' },],
           })(
             <Input
@@ -104,6 +83,7 @@ class ToDoForm extends React.Component {
         </Form.Item>
         <Form.Item label='Content' validateStatus={contentError ? 'error' : ''} help={contentError || ''}>
           {getFieldDecorator('content', {
+            initialValue: todoItem.content || "",
             rules: [{ required: true, message: 'Please input todo content' }],
           })(
             <TextArea
@@ -111,10 +91,15 @@ class ToDoForm extends React.Component {
             />)}
         </Form.Item>
         <Form.Item style={{ display: 'none' }}>
-          {getFieldDecorator('is_done')(<Input type="hidden" />)}
+          {getFieldDecorator('is_done', {
+            initialValue: todoItem.is_done || false,
+          })(<Input type="hidden" />)}
         </Form.Item>
         <Form.Item style={{ display: 'none' }}>
-          {getFieldDecorator('id')(<Input type="hidden" />)}
+          {getFieldDecorator('id', {
+            initialValue: todoItem.id || ""
+          }
+          )(<Input type="hidden" />)}
         </Form.Item>
         <Form.Item>
           <Button type="default" onClick={this.handleCancel}>

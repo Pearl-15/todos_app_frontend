@@ -34,34 +34,20 @@ class ToDoItem extends React.Component {
   }
 
   handleEdit = async() => {
-    let selectedToDoItem = {
-      "id":this.props.id,
-      "title": this.props.title,
-      "content": this.props.content,
-      "created_at": this.props.created_at,
-      "is_done": this.props.is_done
-    }
-  
-    todoStore.setSelectedToDoItem(selectedToDoItem);
-    await this.props.onEdit(this.props.id);
+    let currentItem = this.props.todoItem;
+    todoStore.setSelectedToDoItem(currentItem);
+    await this.props.onEdit(currentItem.id);
   }
 
   handleDelete = () => {
-    this.props.onDelete(this.props.id);
+    this.props.onDelete(this.props.todoItem.id);
   };
 
   handleTaskDone = (e) => {
     console.log('target : ', e)
-
-    let selectedToDoItem = {
-      "id":this.props.id,
-      "title": this.props.title,
-      "content": this.props.content,
-      "created_at": this.props.created_at,
-      "is_done": this.props.is_done
-    }
-    todoStore.setSelectedToDoItem(selectedToDoItem);
-    this.props.onChangeStatus(e, this.props.id);
+    let currentItem = this.props.todoItem;
+    todoStore.setSelectedToDoItem(currentItem);
+    this.props.onChangeStatus(e, currentItem.id);
   }
 
   setToDoItem = () =>{
@@ -99,7 +85,7 @@ class ToDoItem extends React.Component {
       <StyledToDoCard>
         <div style={{ display: 'flex', justifyContent: 'space-between' }}>
           <div>
-            {todoItem.is_done ? <Tag color="#3ec166">{todoItem.title}</Tag> : <Tag color="grey">{this.props.title}</Tag>}
+            {todoItem.is_done ? <Tag color="#3ec166">{todoItem.title}</Tag> : <Tag color="grey">{todoItem.title}</Tag>}
           </div>
 
           <div>
