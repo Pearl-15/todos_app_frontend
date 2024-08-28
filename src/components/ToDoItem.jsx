@@ -5,7 +5,7 @@ import styled from 'styled-components';
 import moment from 'moment';
 import { observer } from 'mobx-react';
 import { todoStore } from '../store/todo';
-import { THEME_COLOR } from '../consts/theme';
+import { CUSTOM_FORMAT, THEME_COLOR } from '../consts/theme';
 
 
 const dateFormat = 'DD/MM/YY';
@@ -100,11 +100,11 @@ class ToDoItem extends React.Component {
         
         <br></br>
         
-        <Tag color="green">Start: {moment.unix(todoItem.created_at).format("DD/MM/YY HH:mm")}</Tag>
+        <Tag color="green">Start: {moment.unix(todoItem.created_at).format(CUSTOM_FORMAT.DATE)}</Tag>
 
         {(todoItem.is_done === true && todoItem.updated_at)
         &&
-        <Tag color="red">End: {moment.unix(todoItem.updated_at).format("DD/MM/YY HH:mm")}</Tag>
+        <Tag color="red">End: {moment.unix(todoItem.updated_at).format(CUSTOM_FORMAT.DATE)}</Tag>
         }
 
         <p>{todoItem.content}</p>

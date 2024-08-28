@@ -3,6 +3,7 @@ import { Form, Input, Button, DatePicker } from 'antd';
 import moment from 'moment';
 import { todoStore } from '../store/todo';
 import { observer } from 'mobx-react';
+import { CUSTOM_FORMAT } from '../consts/theme';
 
 const { TextArea } = Input;
 
@@ -38,7 +39,7 @@ class ToDoForm extends React.Component {
           setFieldsValue({
             title: "",
             content: "",
-            created_at: today,
+            created_at: "",
             is_done: false,
           });
         }
@@ -56,15 +57,20 @@ class ToDoForm extends React.Component {
     const titleError = getFieldError('title');
     const contentError = getFieldError('content');
     let todoItem = todoStore.selectedToDoItem;
-
+    if(todoItem["created_at"]){
+      console.log("Have Created At key ")
+      console.log(moment(todoItem.created_at));
+    }else{
+      console.log("No Created At key ")
+    }
     return (
       <Form onSubmit={this.handleSubmit}>
         <Form.Item label='Date'>
           {getFieldDecorator('created_at', 
           {
-            initialValue: todoItem.create_at  ? moment(todoItem.create_at): moment(new Date()),
+            initialValue: todoItem["created_at"] ? moment(todoItem["created_at"] * 1000) : moment(new Date()),
             rules: [{ required: true, message: 'Please select date!' }],
-          })(<DatePicker format="DD/YY/MM HH:mm" disabledDate={disabledDate} showTime/>)}
+          })(<DatePicker format={CUSTOM_FORMAT.DATE} disabledDate={disabledDate} />)}
         </Form.Item>
         <Form.Item label='Title' validateStatus={titleError ? 'error' : ''} help={titleError || ''}>
           {getFieldDecorator('title', {

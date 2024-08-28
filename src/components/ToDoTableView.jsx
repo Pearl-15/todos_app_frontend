@@ -1,6 +1,6 @@
 import { observer } from 'mobx-react';
 import React from 'react';
-import { THEME_COLOR } from '../consts/theme';
+import { CUSTOM_FORMAT, THEME_COLOR } from '../consts/theme';
 import {Icon, Button, Tag, Table, Popconfirm} from 'antd';
 import {StyledSwitch} from './ToDoItem';
 import moment from 'moment';
@@ -33,7 +33,7 @@ class ToDoTableView extends React.Component{
                 key: 'created_at',
                 render: created_at => {
                     return (
-                        <Tag>{moment.unix(created_at).format("DD/MM/YY HH:mm")}</Tag>
+                        <Tag>{moment.unix(created_at).format(CUSTOM_FORMAT.DATE)}</Tag>
                     )
                 }
                 
@@ -45,7 +45,7 @@ class ToDoTableView extends React.Component{
                 render: (updated_at, record) => {
                     if(record.is_done === true && updated_at){
                         return (
-                            <Tag>{moment.unix(updated_at).format("DD/MM/YY HH:mm")}</Tag>
+                            <Tag>{moment.unix(updated_at).format(CUSTOM_FORMAT.DATE)}</Tag>
                         )
                     }
                 }

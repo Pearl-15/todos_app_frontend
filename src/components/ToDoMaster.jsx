@@ -60,11 +60,9 @@ class ToDoMaster extends React.Component {
             //    const targetItem = this.state.filteredToDoTable.find((item) => item.id === todoItemId);
                 let targetItem = todoStore.selectedToDoItem;
                 console.log("selected todo item is ", targetItem.title);
-               const dateMoment = moment(targetItem.created_at).unix(); //convert date(string) to
                this.setState({
                    isFormVisible: true
                });   
-               targetItem.created_at = dateMoment;
                todoStore.setSelectedToDoItem(targetItem)
                console.log("OnEdit : ", todoItemId);
         }         
