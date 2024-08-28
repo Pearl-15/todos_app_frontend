@@ -19,10 +19,10 @@ const StyledToDoCard = styled.div`
 
 `;
 
-const StyledSwitch = styled(Switch)`
+export const StyledSwitch = styled(Switch)`
   margin-inline-right: 40em;
   &.ant-switch-checked {
-    background-color: #3ec166;
+    background-color: ${THEME_COLOR.GREEN};
   }  
 `
 
@@ -85,7 +85,7 @@ class ToDoItem extends React.Component {
       <StyledToDoCard>
         <div style={{ display: 'flex', justifyContent: 'space-between' }}>
           <div>
-            {todoItem.is_done ? <Tag color="#3ec166">{todoItem.title}</Tag> : <Tag color="grey">{todoItem.title}</Tag>}
+            {todoItem.is_done ? <Tag color={THEME_COLOR.GREEN}>{todoItem.title}</Tag> : <Tag color="grey">{todoItem.title}</Tag>}
           </div>
 
           <div>

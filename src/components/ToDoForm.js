@@ -2,6 +2,7 @@ import React from 'react';
 import { Form, Input, Button, DatePicker } from 'antd';
 import moment from 'moment';
 import { todoStore } from '../store/todo';
+import { observer } from 'mobx-react';
 
 const { TextArea } = Input;
 
@@ -48,21 +49,14 @@ class ToDoForm extends React.Component {
   handleCancel = async (e) => {
     e.preventDefault();
     this.props.onCancel();
-    const { setFieldsValue } = this.props.form;
-      setFieldsValue({
-        id:"",
-        title: "",
-        content: "",
-        created_at: today,
-        is_done: false,
-      }); 
   }
 
   render() {
     const { getFieldDecorator, getFieldError } = this.props.form;
     const titleError = getFieldError('title');
     const contentError = getFieldError('content');
-    const todoItem = todoStore.selectedToDoItem;
+    let todoItem = todoStore.selectedToDoItem;
+
     return (
       <Form onSubmit={this.handleSubmit}>
         <Form.Item label='Date'>
@@ -116,4 +110,6 @@ class ToDoForm extends React.Component {
   }
 }
 
-export default Form.create({ name: 'form_component' })(ToDoForm);
+const WrappedForm = Form.create({name: 'form_component'})(ToDoForm);
+
+export default (observer(WrappedForm));

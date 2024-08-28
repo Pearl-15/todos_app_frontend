@@ -8,6 +8,7 @@ import moment from 'moment';
 class ToDo {
     todoTable = [];
     selectedToDoItem = {};
+    viewType = "";
 
     setSelectedToDoItem = (targetItem) => {
         if (!targetItem) {
@@ -16,6 +17,10 @@ class ToDo {
         }
         this.selectedToDoItem = targetItem;
     };
+
+    setViewType = (viewType) =>{
+        this.viewType = viewType;
+    }
 
     addToDoItem = flow(function* (todoItem) {
 
@@ -76,7 +81,9 @@ class ToDo {
 decorate(ToDo, {
     todoTable: observable,
     selectedToDoItem: observable,
+    viewType: observable,
     setSelectedToDoItem: action,
+    setViewType: action,
     addToDoItem: action,
     deleteToDoItem: action,
     updateToDoItem: action,
