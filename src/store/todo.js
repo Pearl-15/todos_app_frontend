@@ -56,7 +56,7 @@ class ToDo {
             responseData = yield UpdateToDoItem(id, updatedValues);   
         }
         console.log('Edited Successfully in DB: ', responseData);
-        this.selectedToDoItem = responseData.data
+        // this.selectedToDoItem = responseData.data
         yield this.getToDoList();
     });
 

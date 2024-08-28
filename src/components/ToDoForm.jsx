@@ -4,6 +4,7 @@ import moment from 'moment';
 import { todoStore } from '../store/todo';
 import { observer } from 'mobx-react';
 import { CUSTOM_FORMAT } from '../consts/theme';
+import { toJS } from 'mobx';
 
 const { TextArea } = Input;
 
@@ -56,7 +57,7 @@ class ToDoForm extends React.Component {
     const { getFieldDecorator, getFieldError } = this.props.form;
     const titleError = getFieldError('title');
     const contentError = getFieldError('content');
-    let todoItem = todoStore.selectedToDoItem;
+    let todoItem = toJS(todoStore.selectedToDoItem);
     if(todoItem["created_at"]){
       console.log("Have Created At key ")
       console.log(moment(todoItem.created_at));

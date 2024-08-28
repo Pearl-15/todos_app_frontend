@@ -88,7 +88,9 @@ class ToDoMaster extends React.Component {
         if (!values.id) {
             //if AddToDoOK
             try {
-                values["date"] = values["date"];
+                console.log("values date", values["created_at"]);
+                console.log('Is moment object:', moment.isMoment(values["created_at"]));
+
                 await todoStore.addToDoItem(values);
                 await this.handleTaskFilter(this.state.selectedTask);
                 this.handleCancel();
@@ -196,7 +198,7 @@ class ToDoMaster extends React.Component {
                     </Col>
                     <Col span={16} >
                         <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'flex-end' }}>
-                        <Switch defaultChecked onChange={this.handleViewChange} checkedChildren="card view" unCheckedChildren="table view" ></Switch> 
+                        <Switch defaultChecked onChange={this.handleViewChange} checkedChildren="card view" unCheckedChildren="table view"></Switch> 
                         <Divider type="vertical"></Divider>
                             <span style={{ marginRight: '8px', color: 'white', backgroundColor: THEME_COLOR.ORANGE, padding: '4.5px 12px', borderRadius: '0.2rem', fontWeight: 'bold' }}>Select Task</span>
                             <SelectTaskDropdown onFilter={this.handleTaskFilter} />
@@ -242,7 +244,7 @@ class ToDoMaster extends React.Component {
                             <ToDoForm
                                 onOk={this.handleOk}
                                 onCancel={this.handleCancel}
-                                todoItem={todoStore.selectedToDoItem}
+                                key={todoStore.selectedToDoItem.id}
                             />
 
                         </StyledModal>
