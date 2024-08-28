@@ -1,17 +1,16 @@
 import React from 'react';
-import ToDoItem from './ToDoItem';
-import ToDoButton from './ToDoButton';
 import { Col, Row, Spin, message, Switch, Divider, Icon, Table, Tag, Button, Popconfirm } from "antd";
 import moment from 'moment';
 import SelectTaskDropdown from './SelectTaskDropdown';
-import { StyledModal } from './ToDoButton';
+import AddToDoButton, { StyledModal } from './AddToDoButton';
 import ToDoForm from './ToDoForm';
 import { todoStore } from '../store/todo';
 import { observer } from 'mobx-react';
 import { toJS } from 'mobx';
 import { uiStore } from '../store/ui';
 import { THEME_COLOR } from '../consts/theme';
-import { StyledSwitch } from './ToDoItem';
+import ToDoCardView from './ToDoCardView';
+import ToDoTableView from './ToDoTableView';
 
 const filter = (selectedTask, todoTable) => {
     let selectedStatus;
@@ -35,7 +34,7 @@ const filter = (selectedTask, todoTable) => {
 
 }
 
-class ToDoTable extends React.Component {
+class ToDoMaster extends React.Component {
 
     constructor(props) {
         super(props);
@@ -187,96 +186,6 @@ class ToDoTable extends React.Component {
     }  
     
     render() {
-
-        const cols = [
-            {
-            title: 'Title',
-            dataIndex: 'title',
-            key: 'title',
-            render: (title, record) => {
-                let tagColor = (record.is_done === true ? THEME_COLOR.GREEN : "grey");
-                return (
-                    <Tag color={tagColor}>{title}</Tag>
-                )
-            }
-            } ,
-            {
-                title: 'Content',
-                dataIndex: 'content',
-                key: 'content'
-            },
-            {
-                title: 'Start Date',
-                dataIndex: 'created_at',
-                key: 'created_at',
-                render: created_at => {
-                    return (
-                        <Tag>{moment.unix(created_at).format("DD/MM/YY HH:mm")}</Tag>
-                    )
-                }
-                
-            },  
-            {
-                title: 'End Date',
-                dataIndex: 'updated_at',
-                key: 'updated_at',
-                render: (updated_at, record) => {
-                    if(record.is_done === true && updated_at){
-                        return (
-                            <Tag>{moment.unix(updated_at).format("DD/MM/YY HH:mm")}</Tag>
-                        )
-                    }
-                }
-            },
-            {
-                title: 'Is Done ?',
-                dataIndex: 'is_done',
-                key: 'is_done',
-                render: (is_done, record) => {
-                   return(
-                    
-                    <StyledSwitch
-                    checked={is_done}
-                    checkedChildren={<Icon type="check" />}
-                    unCheckedChildren={<Icon type="close" />}
-                    onChange={(checked) => this.handleChangeStatus(checked, record.id)}
-                    />
-                   )
-                }
-            },
-            {
-                title: 'Edit/Delete',
-                key: 'edit/delete',
-                render: (edit_delete, record) => {
-                    return(
-                    <>
-                    <Button 
-                        onClick={()=>  {
-                        console.log("edit button has been click at",toJS(record));
-                        todoStore.setSelectedToDoItem(record)
-                        this.showToDoForm(record.id)}
-                        }  
-                        type="primary" 
-                        size="small" 
-                        shape="circle">
-                        <Icon type="edit">
-                        </Icon>
-                    </Button>
-                    <Popconfirm
-                    title="Are you sure delete this todo?"
-                    onConfirm={()=> this.handleDelete(record.id)}
-                    okText="Yes"
-                    cancelText="No"
-                    >
-                    <Button type="danger" size="small" shape="circle">
-                    <Icon type="delete" />
-                    </Button>
-                    </Popconfirm>
-                    </>
-                    )
-                }
-            }   
-        ];
     
         console.log(toJS(todoStore.todoTable))
         let isTableView = (todoStore.viewType === "table" ? true : false)
@@ -285,7 +194,7 @@ class ToDoTable extends React.Component {
             <div>
                 <Row>
                     <Col span={8}>
-                        <ToDoButton onAdd={this.showToDoForm} />
+                        <AddToDoButton onAdd={this.showToDoForm} />
                     </Col>
                     <Col span={16} >
                         <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'flex-end' }}>
@@ -307,33 +216,22 @@ class ToDoTable extends React.Component {
                 :                   
                 <>
                     {isTableView ? 
-                    <Table dataSource={this.state.filteredToDoTable} columns={cols} rowKey="id">
-
-                    </Table>
+                    <ToDoTableView 
+                        filteredToDoTable = {this.state.filteredToDoTable}
+                        onDelete={this.handleDelete}
+                        onEdit={this.showToDoForm}
+                        onChangeStatus={this.handleChangeStatus}
+                    />
                     
                         
                     :
-                        
-                    <Row gutter={[16, 20]}>
 
-                        {this.state.filteredToDoTable.map((todoItem) => {
-
-                            // const dateMoment = moment(todoItem.created_at);
-                            console.log("todoitem.content", todoItem.content)
-                            return (
-
-                                <Col span={6} key={todoItem.id}>
-                                    <ToDoItem
-                                        todoItem={todoItem}
-                                        onDelete={this.handleDelete}
-                                        onEdit={this.showToDoForm}
-                                        onChangeStatus={this.handleChangeStatus}
-                                    />
-                                </Col>
-                            )
-                        })}
-                    </Row>
-
+                    <ToDoCardView 
+                        filteredToDoTable={this.state.filteredToDoTable}
+                        onDelete={this.handleDelete}
+                        onEdit={this.showToDoForm}
+                        onChangeStatus={this.handleChangeStatus}
+                    />                   
                         }
 
                         <StyledModal
@@ -358,4 +256,4 @@ class ToDoTable extends React.Component {
     }
 }
 
-export default observer(ToDoTable);
+export default observer(ToDoMaster);

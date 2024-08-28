@@ -27,7 +27,7 @@ export const StyledModal = styled(Modal)`
 
 
 
-class ToDoButton extends React.Component {
+class AddToDoButton extends React.Component {
 
   handleAddToDo = ()=>{
     this.props.onAdd();
@@ -43,4 +43,4 @@ class ToDoButton extends React.Component {
     );
   }
 }
-export default ToDoButton;
+export default AddToDoButton;

@@ -5,7 +5,6 @@ import styled from 'styled-components';
 import moment from 'moment';
 import { observer } from 'mobx-react';
 import { todoStore } from '../store/todo';
-import { toJS } from 'mobx';
 import { THEME_COLOR } from '../consts/theme';
 
 

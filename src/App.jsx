@@ -1,11 +1,11 @@
 import './App.css';
 
 import React from 'react';
-import ToDoTable from './components/ToDoTable';
 import HeaderSection from './components/HeaderSection';
 import { Hub } from 'aws-amplify';
 import { Layout } from "antd";
 import FooterSection from './components/FooterSection';
+import ToDoMaster from './components/ToDoMaster';
 // import './customize.scss'; // Adjust the path to match your SCSS file's location
 
 const {Content} = Layout;
@@ -54,7 +54,7 @@ class App extends React.Component{
           <Layout>
               <HeaderSection />
                 <Content>
-                  <ToDoTable />
+                  <ToDoMaster/>
                 </Content>
                   <FooterSection />
           </Layout>
