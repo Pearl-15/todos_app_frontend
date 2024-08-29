@@ -6,15 +6,50 @@ import {StyledSwitch} from './ToDoItem';
 import moment from 'moment';
 import {todoStore} from '../store/todo';
 import {toJS} from 'mobx';
+import styled from 'styled-components';
+
+const StyledTable = styled(Table)`
+  .ant-table-thead > tr > th {
+    background-color: white;
+    color: ${THEME_COLOR.ORANGE}; 
+    font-weight: bold;
+    font-style: italic;
+    border-top: 2px solid ${THEME_COLOR.ORANGE};
+    border-bottom: 2px solid ${THEME_COLOR.ORANGE};
+  }
+
+  .ant-table-tbody > tr:nth-child(odd) {
+    background-color: ${THEME_COLOR['LIGHT-GREY']} ;
+  }
+
+  .ant-table-cell-title {
+    padding-left: 20px; 
+  }
+`;
 
 class ToDoTableView extends React.Component{
+
+    constructor(props){
+        super(props);
+        this.state = {
+            pageSize: 10
+        }
+    }
+
+    handleSizeChange = (current, pageSize) => {
+        this.setState({
+            pageSize: pageSize
+        })
+    }
     render(){
     
         const cols = [
             {
             title: 'Title',
             dataIndex: 'title',
+            width: '15%',
             key: 'title',
+            className: 'ant-table-cell-title',
             render: (title, record) => {
                 let tagColor = (record.is_done === true ? THEME_COLOR.GREEN : "grey");
                 return (
@@ -25,27 +60,30 @@ class ToDoTableView extends React.Component{
             {
                 title: 'Content',
                 dataIndex: 'content',
+                width: '40%',
                 key: 'content'
             },
             {
-                title: 'Start Date',
+                title: 'Start',
                 dataIndex: 'created_at',
+                width: '10%',
                 key: 'created_at',
                 render: created_at => {
                     return (
-                        <Tag>{moment.unix(created_at).format(CUSTOM_FORMAT.DATE)}</Tag>
+                        <Tag color="green">{moment.unix(created_at).format(CUSTOM_FORMAT.DATE)}</Tag>
                     )
                 }
                 
             },  
             {
-                title: 'End Date',
+                title: 'End',
                 dataIndex: 'updated_at',
+                width: '10%',
                 key: 'updated_at',
                 render: (updated_at, record) => {
                     if(record.is_done === true && updated_at){
                         return (
-                            <Tag>{moment.unix(updated_at).format(CUSTOM_FORMAT.DATE)}</Tag>
+                            <Tag color="red">{moment.unix(updated_at).format(CUSTOM_FORMAT.DATE)}</Tag>
                         )
                     }
                 }
@@ -53,6 +91,7 @@ class ToDoTableView extends React.Component{
             {
                 title: 'Is Done ?',
                 dataIndex: 'is_done',
+                width: '5%',
                 key: 'is_done',
                 render: (is_done, record) => {
                    return(
@@ -68,6 +107,7 @@ class ToDoTableView extends React.Component{
             },
             {
                 title: 'Edit/Delete',
+                width: '5%',
                 key: 'edit/delete',
                 render: (edit_delete, record) => {
                     return(
@@ -100,16 +140,22 @@ class ToDoTableView extends React.Component{
             }   
         ];
         return(
-
-            <Table 
+            <div style={{ marginTop: '10px'}}>
+            <StyledTable
             dataSource={this.props.filteredToDoTable} 
             columns={cols} 
             rowKey="id"
             onEdit={this.props.onEdit}
             onDelete={this.props.onDelete}
             onChangeStatus={this.props.onChangeStatus}
+            pagination={{
+                pageSize: this.state.pageSize,
+                showSizeChanger: true,
+                onShowSizeChange: this.handleSizeChange
+            }}
             >
-            </Table>
+            </StyledTable>
+            </div>
         )
     }
 }
