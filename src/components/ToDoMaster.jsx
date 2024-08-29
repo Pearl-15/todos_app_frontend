@@ -198,10 +198,14 @@ class ToDoMaster extends React.Component {
                     </Col>
                     <Col span={16} >
                         <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'flex-end' }}>
-                        <Switch defaultChecked onChange={this.handleViewChange} checkedChildren="card view" unCheckedChildren="table view"></Switch> 
+                        {!isTableView && 
+                        <>
+                        <span style={{ marginRight: '8px', color: 'white', backgroundColor: THEME_COLOR.ORANGE, padding: '4.5px 12px', borderRadius: '0.2rem', fontWeight: 'bold' }}>Select Task</span>
+                        <SelectTaskDropdown onFilter={this.handleTaskFilter} />
                         <Divider type="vertical"></Divider>
-                            <span style={{ marginRight: '8px', color: 'white', backgroundColor: THEME_COLOR.ORANGE, padding: '4.5px 12px', borderRadius: '0.2rem', fontWeight: 'bold' }}>Select Task</span>
-                            <SelectTaskDropdown onFilter={this.handleTaskFilter} />
+                        </>
+                        }
+                        <Switch defaultChecked onChange={this.handleViewChange} checkedChildren="card view" unCheckedChildren="table view"></Switch> 
                         </div>
                     </Col>
                 </Row>
