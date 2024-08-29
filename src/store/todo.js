@@ -9,6 +9,7 @@ class ToDo {
     todoTable = [];
     selectedToDoItem = {};
     viewType = "";
+    currentFilterdRows = [];
 
     setSelectedToDoItem = (targetItem) => {
         if (!targetItem) {
@@ -20,6 +21,10 @@ class ToDo {
 
     setViewType = (viewType) =>{
         this.viewType = viewType;
+    }
+
+    setCurrentFilteredRows = (currentTable) =>{
+        this.currentFilterdRows = currentTable;
     }
 
     addToDoItem = flow(function* (todoItem) {
@@ -82,8 +87,10 @@ decorate(ToDo, {
     todoTable: observable,
     selectedToDoItem: observable,
     viewType: observable,
+    currentFilterdRows: observable,
     setSelectedToDoItem: action,
     setViewType: action,
+    setCurrentFilteredRows: action,
     addToDoItem: action,
     deleteToDoItem: action,
     updateToDoItem: action,

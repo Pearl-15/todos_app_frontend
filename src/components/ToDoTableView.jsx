@@ -108,6 +108,7 @@ class ToDoTableView extends React.Component{
     handleTableChange = (pagination, filters, sorter, extra) => {
         console.log("Current filtered rows:", extra.currentDataSource);
         this.setState({ currentFilteredRows: extra.currentDataSource });
+        todoStore.setCurrentFilteredRows(extra.currentDataSource);
     };
 
 

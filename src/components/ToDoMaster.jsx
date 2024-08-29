@@ -8,9 +8,11 @@ import { todoStore } from '../store/todo';
 import { observer } from 'mobx-react';
 import { toJS } from 'mobx';
 import { uiStore } from '../store/ui';
-import { THEME_COLOR } from '../consts/theme';
+import { CUSTOM_FORMAT, THEME_COLOR } from '../consts/theme';
 import ToDoCardView from './ToDoCardView';
 import ToDoTableView from './ToDoTableView';
+import { handleExportData } from '../utils/utils';
+import ExportCSVBtn from './ExportCSVBtn';
 
 const filter = (selectedTask, todoTable) => {
     let selectedStatus;
@@ -163,17 +165,6 @@ class ToDoMaster extends React.Component {
         }
     }
 
-    componentWillUnmount(){
-        this.setState(
-        {
-                filteredToDoTable: [],
-                selectedTask: "",
-                isFormVisible: false,
-        }
-        )
-    }
-
-
 
     handleViewChange = (e) => {
         console.log("handle view change ", e)
@@ -184,6 +175,53 @@ class ToDoMaster extends React.Component {
         }
        
     }  
+
+    handleExportCSV = (selectedOption) => {
+        let data;
+        let date_str = moment().format(CUSTOM_FORMAT.DATE);
+        data = this.handleDataTransfer(selectedOption);
+        let fileName = date_str +'_' + selectedOption;
+        handleExportData(data,fileName);
+    }
+
+    handleDataTransfer = (selectedOption) => {
+        let sortedData;
+        let export_data;
+        switch(selectedOption){
+            case "all":
+                sortedData = todoStore.todoTable; 
+                break;
+            case "current_table":
+                sortedData = todoStore.currentFilterdRows;
+                break;
+            default:
+                break;
+        }
+    
+        if (!sortedData || !Array.isArray(sortedData)) return [];
+        
+        export_data = sortedData.map((item, idx) => {
+            return {
+                "Title": `"${item["title"]}"`,
+                "content": `"${item["content"]}"`,
+                "Start": moment.unix(item["created_at"]).format(CUSTOM_FORMAT.DATE),
+                "End": item["updated_at"] ? moment.unix(item["updated_at"]).format(CUSTOM_FORMAT.DATE) : "",
+                "Is Done?": (item["is_done"] === true ? "Done" : "Not Done"),
+            };
+        });  
+
+        return export_data;
+    };
+
+    componentWillUnmount(){
+        this.setState(
+        {
+                filteredToDoTable: [],
+                selectedTask: "",
+                isFormVisible: false,
+        }
+        )
+    }
     
     render() {
     
@@ -202,9 +240,15 @@ class ToDoMaster extends React.Component {
                         <>
                         <span style={{ marginRight: '8px', color: 'white', backgroundColor: THEME_COLOR.ORANGE, padding: '4.5px 12px', borderRadius: '0.2rem', fontWeight: 'bold' }}>Select Task</span>
                         <SelectTaskDropdown onFilter={this.handleTaskFilter} />
-                        <Divider type="vertical"></Divider>
                         </>
                         }
+                        {isTableView &&
+                        <ExportCSVBtn
+                        onChange={this.handleExportCSV}
+                        >
+                        </ExportCSVBtn>
+                        }
+                        <Divider type="vertical"></Divider>
                         <Switch defaultChecked onChange={this.handleViewChange} checkedChildren="card view" unCheckedChildren="table view"></Switch> 
                         </div>
                     </Col>
@@ -221,10 +265,10 @@ class ToDoMaster extends React.Component {
                 <>
                     {isTableView ? 
                     <ToDoTableView 
-                        filteredToDoTable = {this.state.filteredToDoTable}
+                        filteredToDoTable = {todoStore.todoTable}
                         onDelete={this.handleDelete}
                         onEdit={this.showToDoForm}
-                        onChangeStatus={this.handleChangeStatus}
+                        onChangeStatus={this.handleChangeStatus}                        
                     />
                     
                         
