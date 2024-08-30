@@ -1,5 +1,5 @@
 import React from 'react';
-import { Col, Row, Spin, message, Switch, Divider, Icon, Table, Tag, Button, Popconfirm } from "antd";
+import { Col, Row, Spin, message, Divider } from "antd";
 import moment from 'moment';
 import SelectTaskDropdown from './SelectTaskDropdown';
 import AddToDoButton, { StyledModal } from './AddToDoButton';
@@ -13,12 +13,13 @@ import ToDoCardView from './ToDoCardView';
 import ToDoTableView from './ToDoTableView';
 import { handleExportData } from '../utils/utils';
 import ExportCSVBtn from './ExportCSVBtn';
+import ViewSelectionRadioButton from './ViewSelectionRadioButton';
 
 const filter = (selectedTask, todoTable) => {
     let selectedStatus;
-    if (selectedTask === "completed") {
+    if (selectedTask === "done") {
         selectedStatus = true
-    } else if (selectedTask === "uncompleted") {
+    } else if (selectedTask === "not_done") {
         selectedStatus = false
     } else {
         selectedStatus = ""
@@ -166,14 +167,9 @@ class ToDoMaster extends React.Component {
     }
 
 
-    handleViewChange = (e) => {
-        console.log("handle view change ", e)
-        if(e === true){
-            todoStore.setViewType("card")
-        }else{
-            todoStore.setViewType("table")
-        }
-       
+    handleViewChange = (selectedView) => {
+        console.log("handle view change ", )
+        todoStore.setViewType(selectedView);    
     }  
 
     handleExportCSV = (selectedOption) => {
@@ -237,10 +233,7 @@ class ToDoMaster extends React.Component {
                     <Col span={16} >
                         <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'flex-end' }}>
                         {!isTableView && 
-                        <>
-                        <span style={{ marginRight: '8px', color: 'white', backgroundColor: THEME_COLOR.ORANGE, padding: '4.5px 12px', borderRadius: '0.2rem', fontWeight: 'bold' }}>Select Task</span>
                         <SelectTaskDropdown onFilter={this.handleTaskFilter} />
-                        </>
                         }
                         {isTableView &&
                         <ExportCSVBtn
@@ -249,7 +242,7 @@ class ToDoMaster extends React.Component {
                         </ExportCSVBtn>
                         }
                         <Divider type="vertical"></Divider>
-                        <Switch defaultChecked onChange={this.handleViewChange} checkedChildren="card view" unCheckedChildren="table view"></Switch> 
+                        <ViewSelectionRadioButton onChange={this.handleViewChange}/>
                         </div>
                     </Col>
                 </Row>
