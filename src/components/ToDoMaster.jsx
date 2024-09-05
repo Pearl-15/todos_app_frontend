@@ -45,7 +45,8 @@ class ToDoMaster extends React.Component {
         this.state = {
             filteredToDoTable: [],
             selectedTask: "",
-            isFormVisible: false
+            isFormVisible: false,
+            mode: "",
         }
         this.formRef = React.createRef();
     }
@@ -55,7 +56,8 @@ class ToDoMaster extends React.Component {
         // add to do 
         if(!todoItemId){
             this.setState({
-                isFormVisible: true
+                isFormVisible: true,
+                mode: "new",
             });
             todoStore.setSelectedToDoItem();
         }else{
@@ -65,7 +67,8 @@ class ToDoMaster extends React.Component {
                 let targetItem = todoStore.selectedToDoItem;
                 console.log("selected todo item is ", targetItem.title);
                this.setState({
-                   isFormVisible: true
+                   isFormVisible: true, 
+                   mode: "edit",
                });   
                todoStore.setSelectedToDoItem(targetItem)
                console.log("OnEdit : ", todoItemId);
@@ -91,7 +94,7 @@ class ToDoMaster extends React.Component {
     handleOk = async(values) => {
         todoStore.setSaving(true);
 
-        if (!values.id) {
+        if (this.state.mode === "new") {
             //if AddToDoOK
             try {
                 console.log("values date", values["created_at"]);
@@ -109,7 +112,7 @@ class ToDoMaster extends React.Component {
             }
 
 
-        } else {
+        } else  if(this.state.mode === "edit"){
             //if EditToDoOK
             try {
                     await todoStore.updateToDoItem(values.id,values);
@@ -281,7 +284,7 @@ class ToDoMaster extends React.Component {
                         }
 
                         <StyledModal
-                            title="Edit ToDo"
+                            title={this.state.mode === "new" ? "New To Do" : "Edit To Do"}
                             visible={this.state.isFormVisible}
                             footer={null}
                             closable={false}
