@@ -47,6 +47,7 @@ class ToDoMaster extends React.Component {
             selectedTask: "",
             isFormVisible: false
         }
+        this.formRef = React.createRef();
     }
 
     showToDoForm = async (todoItemId) => {
@@ -86,18 +87,21 @@ class ToDoMaster extends React.Component {
         }
 
     }
-    handleOk = async (values) => {
+
+    handleOk = async(values) => {
+        todoStore.setSaving(true);
 
         if (!values.id) {
             //if AddToDoOK
             try {
                 console.log("values date", values["created_at"]);
-                console.log('Is moment object:', moment.isMoment(values["created_at"]));
-
+                console.log('Is moment object:', moment.isMoment(values["created_at"])); 
                 await todoStore.addToDoItem(values);
-                await this.handleTaskFilter(this.state.selectedTask);
+                message.success('New ToDo has been added successfully', 2);
+                this.formRef.props.form.resetFields();
                 this.handleCancel();
-                await message.success('New ToDo has been added successfully', 2);
+                this.handleTaskFilter(this.state.selectedTask);
+                todoStore.setSaving(false);
 
             } catch (e) {
                 message.error('Add ToDo unsuccessful, something is wrong, please try again!');
@@ -108,14 +112,15 @@ class ToDoMaster extends React.Component {
         } else {
             //if EditToDoOK
             try {
-                await todoStore.updateToDoItem(values.id,values);
-                await this.handleTaskFilter(this.state.selectedTask);
-                this.handleCancel(values);
-                message.success('ToDo has been edited successfully', 2);
-            } catch (e) {
+                    await todoStore.updateToDoItem(values.id,values);
+                    message.success('ToDo has been edited successfully', 2);
+                    this.handleTaskFilter(this.state.selectedTask);
+                    todoStore.setSaving(false);
+                    this.handleCancel(values);
+                } catch (e) {
                 message.error('Edit unsuccessful, something is wrong, please try again!');
                 console.log('Component Error: ', e.message);
-            }
+                }
         }
 
         todoStore.setSelectedToDoItem();
@@ -250,7 +255,7 @@ class ToDoMaster extends React.Component {
                 {uiStore.isloading 
                 ?
                 <>
-                    <div style={{ textAlign: "center", margin: "30%" }}>
+                    <div style={{ textAlign: "center", margin: "20%" }}>
                         <Spin tip="Loading..."></Spin>
                     </div>
                 </> 
@@ -286,6 +291,8 @@ class ToDoMaster extends React.Component {
                                 onOk={this.handleOk}
                                 onCancel={this.handleCancel}
                                 key={todoStore.selectedToDoItem.id}
+                                isSaving={todoStore.isSaving}
+                                wrappedComponentRef={(inst) => (this.formRef = inst)}
                             />
 
                         </StyledModal>

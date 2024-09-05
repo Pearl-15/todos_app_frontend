@@ -20,30 +20,16 @@ function disabledDate(current) {
 
 class ToDoForm extends React.Component {
 
-  componentWillUnmount() {
-    console.log('Component Will Unmount')
-    this.props.form.resetFields();
-  }
 
 
   handleSubmit = e => {
     e.preventDefault();
-    this.props.form.validateFieldsAndScroll((err, values) => {
+    const {form, onOk } = this.props;
+    form.validateFields((err, values) => {
       if (!err) {
         console.log('Received values of form From FormComponent: ', values);
-        this.props.onOk(values);
+        onOk(values);
 
-        if (!this.props.form.getFieldValue('id')) {
-
-          //can't use resetFields() as hidden field status & date will be setback to empty, so that need to manually set 
-          const { setFieldsValue } = this.props.form;
-          setFieldsValue({
-            title: "",
-            content: "",
-            created_at: "",
-            is_done: false,
-          });
-        }
       }
     });
   };
@@ -107,7 +93,7 @@ class ToDoForm extends React.Component {
             Cancel
           </Button>
           <span style={{ margin: '0 8px' }}></span>
-          <Button type="primary" htmlType="submit">
+          <Button type="primary" htmlType="submit" loading={this.props.isSaving}>
             Ok
           </Button>
         </Form.Item>       

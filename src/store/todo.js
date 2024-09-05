@@ -10,6 +10,7 @@ class ToDo {
     selectedToDoItem = {};
     viewType = "";
     currentFilterdRows = [];
+    isSaving = false;
 
     setSelectedToDoItem = (targetItem) => {
         if (!targetItem) {
@@ -25,6 +26,10 @@ class ToDo {
 
     setCurrentFilteredRows = (currentTable) =>{
         this.currentFilterdRows = currentTable;
+    }
+
+    setSaving = (isSaving) => {
+        this.isSaving = isSaving;
     }
 
     addToDoItem = flow(function* (todoItem) {
@@ -61,7 +66,6 @@ class ToDo {
             responseData = yield UpdateToDoItem(id, updatedValues);   
         }
         console.log('Edited Successfully in DB: ', responseData);
-        // this.selectedToDoItem = responseData.data
         yield this.getToDoList();
     });
 
@@ -69,7 +73,8 @@ class ToDo {
         const responseData = yield GetToDoList();
         console.log("response Data", responseData.data);
         if (responseData.data) {
-            this.todoTable = responseData.data;
+            const sortedToDos = responseData.data.sort((a, b) => new Date(b.created_at) - new Date(a.created_at));
+            this.todoTable = sortedToDos;
         }
     });
 
@@ -88,9 +93,11 @@ decorate(ToDo, {
     selectedToDoItem: observable,
     viewType: observable,
     currentFilterdRows: observable,
+    isSaving: observable,
     setSelectedToDoItem: action,
     setViewType: action,
     setCurrentFilteredRows: action,
+    setSaving: action,
     addToDoItem: action,
     deleteToDoItem: action,
     updateToDoItem: action,
